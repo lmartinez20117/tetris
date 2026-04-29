@@ -21,10 +21,10 @@ let taulell = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -93,7 +93,7 @@ let peçaGrafic = [
     ], [
         [
             [3, 0, 0, 0],
-            [3, 3, 3, 3],
+            [3, 3, 3, 0],
             [0, 0, 0, 0],
             [0, 0, 0, 0],
         ],
@@ -101,11 +101,11 @@ let peçaGrafic = [
             [0, 3, 3, 0],
             [0, 3, 0, 0],
             [0, 3, 0, 0],
-            [0, 3, 0, 0],
+            [0, 0, 0, 0],
         ],
         [
             [0, 0, 0, 0],
-            [3, 3, 3, 3],
+            [0, 3, 3, 3],
             [0, 0, 0, 3],
             [0, 0, 0, 0],
         ],
@@ -244,6 +244,24 @@ let obPeça = function () {
         this.y = 0
     }
 
+    this.gameOver = function(){
+        let perdut = false;
+        for(px=1; px<=ampleTaulell; px++){
+            if(taulell[3][px]!=0){
+                perdut = true;
+            }
+        }
+        return perdut;
+    }
+    this.fixaPeça = function(){
+        for (let py = 0; py < 4; py++) {
+            for (let px = 0; px < 4; px++) {
+                if (peçaGrafic[this.tipo][this.angle][py][px] != 0) {
+                    taulell[this.y+py][this.x+px] = peçaGrafic[this.tipo][this.angle][py][px]
+                }
+            }
+        }
+    }
     
     this.dibuixa = function () {
         for (let py = 0; py < 4; py++) {
@@ -286,6 +304,12 @@ let obPeça = function () {
             if(this.colisio(this.angle,this.y+1,this.x)==false){
                 this.y++
                 contador=0;
+            }else{
+                this.fixaPeça();
+                if(this.gameOver()){
+                    document.location.reload();
+                }
+                this.nova();
             }
         }
        
@@ -343,11 +367,11 @@ let obPeça = function () {
 }
 
 function taulelldibuixa() {
-    for (let py = 0; py < altTaulell; py++) {
-        for (let px = 0; px < ampleTaulell; px++) {
+    for (let py = 0; py <= altTaulell; py++) {
+        for (let px = 0; px <= ampleTaulell; px++) {
             if (taulell[py][px] != 0) {
 
-                    ctx.fillStyle = '#ffa42e';
+                    ctx.fillStyle = 'rgb(241, 250, 118)';
         
 
                  ctx.fillRect((px-1) * amplef, (py-4) * altf, amplef, altf)
