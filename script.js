@@ -5,6 +5,7 @@ let FPS = 50;
 let peça;
 let retras = 50;
 let contador = 0;
+let puntos = 0;
 
 let ampleCanvas = 400;
 let altCanvas = 640;
@@ -14,6 +15,10 @@ let altTaulell = 20;
 
 let amplef = 40;
 let altf = 40;
+
+const canço = new Audio("./musica/fondo.mp3")
+const sonido1 = new Audio("./musica/sonido1.mp3")
+const sonido2 =new Audio("./musica/sonido2.mp3")
 
 let taulell = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -238,6 +243,44 @@ let obPeça = function () {
     this.angle = 0;
     this.tipo = 0;
 
+    this.fila = function(){
+        let filafeta = false;
+
+        for(py=4;py<altTaulell; py++){
+            filafeta = true;
+            for(let px=1; px<=ampleTaulell; px++){
+                if(taulell[py][px]==0){
+                    filafeta=false;
+                }
+            }
+            if(filafeta){
+                puntos++
+                sonido1.play();
+                if(puntos%3==0){
+                    retras = retras-5;
+                }
+                console.log(retras)
+                for(let moverfila = py; moverfila > 0; moverfila --){
+                    for(let px=1; px <=ampleTaulell; px++){
+                        taulell[moverfila][px]=0
+                        if(taulell[moverfila-1][px]!=0){
+                            taulell[moverfila][px]=taulell[moverfila-1][px]
+                        }
+                    }
+                }
+                for(let y = altTaulell; y>0; y--){
+                    for(let x=1; x<=ampleTaulell; x++){
+                        if(taulell[y][x] == 0){
+                            for(let yN=y; yN>0; yN--){
+                                taulell[y][x] = taulell [yN-1][x]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     this.nova = function(){
         this.tipo = Math.floor(Math.random()*8);
         this.x = 4
@@ -306,6 +349,7 @@ let obPeça = function () {
                 contador=0;
             }else{
                 this.fixaPeça();
+                this.fila();
                 if(this.gameOver()){
                     document.location.reload();
                 }
@@ -326,6 +370,7 @@ let obPeça = function () {
         if(this.colisio(angleNou,this.y,this.x)==false){
             this.angle = angleNou
         }
+        sonido2.play();
 
     }
 
@@ -371,7 +416,7 @@ function taulelldibuixa() {
         for (let px = 0; px <= ampleTaulell; px++) {
             if (taulell[py][px] != 0) {
 
-                    ctx.fillStyle = 'rgb(241, 250, 118)';
+                    ctx.fillStyle = '#fff45c';
         
 
                  ctx.fillRect((px-1) * amplef, (py-4) * altf, amplef, altf)
@@ -398,6 +443,11 @@ function inicialitzaTeclat() {
         }
     })
 }
+function pintarPunts() {
+    ctx.font = "24px serif"
+    ctx.fillStyle = '#000000';
+    ctx.fillText("Score: "+puntos, 10, 50);
+}
 
 function inicia() {
     canvas = document.getElementById("canvas");
@@ -407,6 +457,10 @@ function inicia() {
     canvas.style.height = altCanvas;
 
     peça = new obPeça();
+
+    setTimeout(function(){
+        canço.play();
+    },2000)
     
 
     inicialitzaTeclat()
@@ -421,6 +475,7 @@ function principal() {
     taulelldibuixa()
     peça.caer()
     peça.dibuixa()
+    pintarPunts();
 
 }
 
