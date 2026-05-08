@@ -445,30 +445,41 @@ function inicialitzaTeclat() {
 }
 function pintarPunts() {
     ctx.font = "24px serif"
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = '#ffffff';
     ctx.fillText("Score: "+puntos, 10, 50);
 }
 
-function inicia() {
+    function inicia() {
+
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext('2d');
 
-    canvas.style.width = ampleCanvas;
-    canvas.style.height = altCanvas;
+    canvas.width = ampleCanvas;
+    canvas.height = altCanvas;
+
+    canvas.style.display = "none";
+}
+function startGame(){
+
+    document.getElementById("menu").style.display = "none";
+
+    canvas.style.display = "block";
 
     peça = new obPeça();
 
     setTimeout(function(){
         canço.play();
-    },2000)
-    
+    },2000);
 
-    inicialitzaTeclat()
+    inicialitzaTeclat();
 
     setInterval(function () {
-        principal()
-    }, 1000 / FPS)
+        principal();
+    }, 1000 / FPS);
 }
+
+
+
 
 function principal() {
     borrarCanvas()
